@@ -4,11 +4,11 @@ import { ReactComponent as AddSearchIcon } from 'icons/search.svg';
 
 class SearchForm extends Component {
   state = {
-    searchQuery: '',
+    value: '',
   };
 
-  handleChange = e => {
-    return this.setState({ searchQuery: e.target.value.trim() });
+  handleChange = ({ target: { value } }) => {
+    return this.setState({ value });
   };
 
   handleSubmit = e => {
@@ -16,12 +16,12 @@ class SearchForm extends Component {
     e.preventDefault();
     onSubmit(this.state);
     this.setState({
-      searchQuery: '',
+      value: '',
     });
   };
 
   render() {
-    const { searchQuery } = this.state;
+    const { value } = this.state;
     return (
       <form onSubmit={this.handleSubmit} className={css.searchForm}>
         <button type="submit" className={css.button}>
@@ -34,7 +34,7 @@ class SearchForm extends Component {
           autoComplete="off"
           autoFocus
           placeholder="Search images and photos"
-          value={searchQuery}
+          value={value}
           onChange={this.handleChange}
         />
       </form>

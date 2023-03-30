@@ -13,4 +13,9 @@ export const fetchSearchQuery = async (searchQuery, page) => {
       per_page: 12,
     },
   });
+  const newImages = [];
+  response.data.hits.forEach(({ id, webformatURL, largeImageURL }) => {
+    newImages.push({ id, webformatURL, largeImageURL });
+  });
+  return { newImages, total: response.data.totalHits };
 };
