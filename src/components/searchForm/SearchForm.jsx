@@ -1,7 +1,7 @@
 import { Component } from 'react';
-import css from './SearchForm.module.css';
+import PropTypes from 'prop-types';
 import { ReactComponent as AddSearchIcon } from 'icons/search.svg';
-
+import css from './SearchForm.module.css';
 class SearchForm extends Component {
   state = {
     value: '',
@@ -15,9 +15,9 @@ class SearchForm extends Component {
     const { onSubmit } = this.props;
     e.preventDefault();
     onSubmit(this.state);
-    this.setState({
-      value: '',
-    });
+    // this.setState({
+    //   value: '',
+    // });
   };
 
   render() {
@@ -42,3 +42,7 @@ class SearchForm extends Component {
   }
 }
 export default SearchForm;
+
+SearchForm.propTypes = {
+  onSubmit: PropTypes.func.isRequired,
+};

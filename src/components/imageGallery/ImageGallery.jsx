@@ -12,7 +12,6 @@ const ImageGallery = ({ images }) => {
         return (
           <ImageGalleryItem
             key={id}
-            id={id}
             webformatURL={webformatURL}
             largeImageURL={largeImageURL}
           />

@@ -1,78 +1,90 @@
 import { Component } from 'react';
 import { fetchSearchQuery } from 'api.js';
-// import PropTypes from 'prop-types';
-
+import PropTypes from 'prop-types';
 import ImageGallery from 'components/imageGallery';
+import Message from 'components/message';
 import Button from 'components/button';
-import NoImages from 'components/noImages';
+import Loader from 'components/loader';
 
 class SectionImageGallery extends Component {
   state = {
-    images: [],
+    images: null,
     page: 1,
+    loadMore: false,
+    isLoading: false,
+    error: false,
   };
 
-  componentDidUpdate(prevProps, prevState) {
+  async componentDidUpdate(prevProps, prevState) {
     const { page } = this.state;
     const { searchQuery } = this.props;
+
     if (searchQuery !== prevProps.searchQuery) {
-      console.log('update serch');
-      if (page === 1) {
-        this.getPictures(searchQuery, page);
-      } else this.setState({ images: [], page: 1 });
+      try {
+        this.setState({ isLoading: true });
+        const { newImages, total } = await fetchSearchQuery(searchQuery, '1');
+        this.setState({
+          images: newImages,
+          page: 1,
+          loadMore: total > 1 ? true : false,
+          error: false,
+        });
+      } catch (error) {
+        this.setState({ error: true });
+      } finally {
+        this.setState({ isLoading: false });
+      }
     }
-    if (page !== prevState.page) {
-      console.log('update page');
-      this.getPictures(searchQuery, page);
-    }
-  }
 
-  async getPictures(searchQuery, page) {
-    console.log('getPictures');
-    console.log('searchQuery', searchQuery);
-    console.log('page', page);
-    try {
-      const data = await fetchSearchQuery(searchQuery, page);
-      console.log('getPictures - try');
-      console.log(data);
-      this.addImeges(data.newImages);
-    } catch (error) {
-      console.log(error);
+    if (page !== prevState.page && page !== 1) {
+      try {
+        this.setState({ isLoading: true });
+        const data = await fetchSearchQuery(searchQuery, page);
+        this.setState(prev => ({
+          images: [...prev.images, ...data.newImages],
+          loadMore: data.total > page ? true : false,
+          error: false,
+        }));
+      } catch (error) {
+        this.setState({ error: true });
+      } finally {
+        this.setState({ isLoading: false });
+      }
     }
-  }
-
-  addImeges(newImages) {
-    this.setState(prev => ({ images: [...prev.images, ...newImages] }));
-    console.log('addImeges');
   }
 
   onClickLoadMore = () => {
     this.setState(prev => ({ page: prev.page + 1 }));
-    console.log('page + 1');
   };
 
+  getMessage() {
+    const { images, isLoading, error } = this.state;
+    if (images === null) {
+      return 'Enter the name of the picture or photo';
+    } else if (images?.length === 0) {
+      return `No pictures were found for your request ${this.props.searchQuery}`;
+    } else if (error) {
+      return `An error occurred, please reload the page or try again later`;
+    } else return null;
+  }
+
   render() {
-    const { images } = this.state;
-    if (images.length !== 0) {
-      return (
-        <>
-          <ImageGallery images={images} />
-          <Button onClick={this.onClickLoadMore} />
-        </>
-      );
-    } else return <NoImages />;
+    console.log('render sect galery');
+    const message = this.getMessage();
+    const { images, loadMore, isLoading } = this.state;
+    return (
+      <>
+        {message && <Message>{message}</Message>}
+        {images?.length > 0 && <ImageGallery images={images} />}
+        {isLoading && <Loader />}
+        {loadMore && <Button onClick={this.onClickLoadMore} />}
+      </>
+    );
   }
 }
 
 export default SectionImageGallery;
 
-// ImageGallery.propTypes = {
-//   dataTransactions: PropTypes.arrayOf(
-//     PropTypes.exact({
-//       id: PropTypes.number.isRequired,
-//       webformatURL: PropTypes.string.isRequired,
-//       largeImageURL: PropTypes.string.isRequired,
-//     })
-//   ),
-//   onClickImage: PropTypes.func.isRequired,
-// };
+SectionImageGallery.propTypes = {
+  searchQuery: PropTypes.string.isRequired,
+};
