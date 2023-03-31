@@ -5,7 +5,6 @@ import ImageGalleryItem from 'components/imageGalleryItem';
 import css from './ImageGallery.module.css';
 
 const ImageGallery = ({ images }) => {
-  console.log('render img');
   return (
     <ul className={css.gallery}>
       {images.map(({ id, webformatURL, largeImageURL }) => {

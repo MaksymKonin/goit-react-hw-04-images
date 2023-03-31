@@ -12,12 +12,10 @@ class App extends Component {
   };
 
   formSubmithandle = ({ value }) => {
-    console.log('formSubmithandle');
     this.setState({ searchQuery: value.trim() });
   };
 
   render() {
-    console.log('render App');
     return (
       <div className={css.App}>
         <Searchbar>

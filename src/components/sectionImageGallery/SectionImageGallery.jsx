@@ -69,7 +69,6 @@ class SectionImageGallery extends Component {
   }
 
   render() {
-    console.log('render sect galery');
     const message = this.getMessage();
     const { images, loadMore, isLoading } = this.state;
     return (
