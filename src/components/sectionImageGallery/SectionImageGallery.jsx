@@ -58,7 +58,7 @@ class SectionImageGallery extends Component {
   };
 
   getMessage() {
-    const { images, isLoading, error } = this.state;
+    const { images, error } = this.state;
     if (images === null) {
       return 'Enter the name of the picture or photo';
     } else if (images?.length === 0) {
