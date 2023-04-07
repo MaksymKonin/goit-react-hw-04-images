@@ -6,11 +6,6 @@ import Modal from 'components/modal';
 
 export default function ImageGalleryItem({ webformatURL, largeImageURL }) {
   const [statusModal, setStatusModal] = useState(false);
-
-  const toggleModal = () => {
-    setStatusModal(!statusModal);
-  };
-
   return (
     <>
       <li className={css.imageGalleryItem}>
@@ -18,11 +13,14 @@ export default function ImageGalleryItem({ webformatURL, largeImageURL }) {
           className={css['imageGalleryItem-image']}
           src={webformatURL}
           alt=""
-          onClick={toggleModal}
+          onClick={() => setStatusModal(!statusModal)}
         ></img>
       </li>
       {statusModal && (
-        <Modal largeImageURL={largeImageURL} onClose={toggleModal}>
+        <Modal
+          largeImageURL={largeImageURL}
+          onClose={() => setStatusModal(!statusModal)}
+        >
           <img src={largeImageURL} alt="largeImage" />
         </Modal>
       )}

@@ -1,47 +1,41 @@
-import { Component } from 'react';
+import { useState } from 'react';
 import PropTypes from 'prop-types';
 import { ReactComponent as AddSearchIcon } from 'icons/search.svg';
 import css from './SearchForm.module.css';
-class SearchForm extends Component {
-  state = {
-    value: '',
-  };
 
-  handleChange = ({ target: { value } }) => {
-    return this.setState({ value });
-  };
+export default function SearchForm({ onSubmit }) {
+  const [searchValue, setSearchValue] = useState('');
 
-  handleSubmit = e => {
-    const { onSubmit } = this.props;
+  // const handleChange = ({ target: { value } }) => {
+  //   return setSearchValue(value);
+  // };
+
+  const handleSubmit = e => {
     e.preventDefault();
-    onSubmit(this.state);
-    // this.setState({
-    //   value: '',
-    // });
+    const searchValueTrim = searchValue.trim();
+    if (searchValueTrim === '') return;
+    onSubmit(searchValueTrim);
+    setSearchValue(searchValueTrim);
   };
 
-  render() {
-    const { value } = this.state;
-    return (
-      <form onSubmit={this.handleSubmit} className={css.searchForm}>
-        <button type="submit" className={css.button}>
-          <AddSearchIcon width={20} height={20} />
-          <span className={css['button-label']}>Search</span>
-        </button>
-        <input
-          className={css.input}
-          type="text"
-          autoComplete="off"
-          autoFocus
-          placeholder="Search images and photos"
-          value={value}
-          onChange={this.handleChange}
-        />
-      </form>
-    );
-  }
+  return (
+    <form onSubmit={handleSubmit} className={css.searchForm}>
+      <button type="submit" className={css.button}>
+        <AddSearchIcon width={20} height={20} />
+        <span className={css['button-label']}>Search</span>
+      </button>
+      <input
+        className={css.input}
+        type="text"
+        autoComplete="off"
+        autoFocus
+        placeholder="Search images and photos"
+        value={searchValue}
+        onChange={e => setSearchValue(e.target.value)}
+      />
+    </form>
+  );
 }
-export default SearchForm;
 
 SearchForm.propTypes = {
   onSubmit: PropTypes.func.isRequired,
