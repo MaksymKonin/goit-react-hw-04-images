@@ -10,7 +10,7 @@ import Loader from 'components/loader';
 import css from './App.module.css';
 
 export default function App() {
-  const [searchQuery, setSearchQuery] = useState(null);
+  const [searchQuery, setSearchQuery] = useState('');
   const [images, setImages] = useState(null);
   const [page, setPage] = useState(1);
   const [isloadMore, setIsLoadMore] = useState(false);
@@ -18,9 +18,10 @@ export default function App() {
   const [isError, setIsError] = useState(false);
 
   useEffect(() => {
-    if (searchQuery === null) {
+    if (searchQuery === '') {
       return;
     }
+
     setIsLoading(true);
     async function fetchData() {
       try {
@@ -43,6 +44,7 @@ export default function App() {
     setSearchQuery(searchQuery);
     setPage(1);
     setImages(null);
+    setIsLoadMore(false);
   };
 
   const getMessage = () => {

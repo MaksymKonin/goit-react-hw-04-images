@@ -13,7 +13,6 @@ export default function SearchForm({ onSubmit }) {
   const handleSubmit = e => {
     e.preventDefault();
     const searchValueTrim = searchValue.trim();
-    if (searchValueTrim === '') return;
     onSubmit(searchValueTrim);
     setSearchValue(searchValueTrim);
   };
